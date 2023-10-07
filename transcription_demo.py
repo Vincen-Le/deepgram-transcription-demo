@@ -4,17 +4,17 @@ from deepgram import Deepgram
 import asyncio, json
 
 # Your Deepgram API Key
-DEEPGRAM_API_KEY = 'YOUR_DEEPGRAM_API_KEY'
+DEEPGRAM_API_KEY = 'e2d29b24566259f4318b2fde99a69a5030644d8f'
 
 # Location of the file you want to transcribe. Should include filename and extension.
 # Example of a local file: ../../Audio/life-moves-pretty-fast.wav
 # Example of a remote file: https://static.deepgram.com/examples/interview_speech-analytics.wav
-FILE = 'YOUR_FILE_LOCATION'
+FILE = 'bueller-life-moves-pretty-fast_uud9ip.wav'
 
 # Mimetype for the file you want to transcribe
 # Include this line only if transcribing a local file
 # Example: audio/wav
-MIMETYPE = 'YOUR_FILE_MIME_TYPE'
+MIMETYPE = 'audio/wav'
 
 async def main():
 
@@ -51,7 +51,9 @@ async def main():
   )
 
   # Write the response to the console
-  print(json.dumps(response, indent=4))
+  result_transcription = json.dumps(response, indent=4)
+  print(result_transcription)
+  # print(json.dumps(response, indent=4))
 
   # Write only the transcript to the console
   #print(response["results"]["channels"][0]["alternatives"][0]["transcript"])
