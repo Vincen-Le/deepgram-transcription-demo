@@ -54,12 +54,14 @@ async def main():
   result_transcription = json.dumps(response, indent=4)
   words = response["results"]["channels"][0]["alternatives"][0]["words"]
   transcript = response["results"]["channels"][0]["alternatives"][0]["transcript"]
-  print(result_transcription)
+  # print(result_transcription)
   # print(json.dumps(response, indent=4))
 
   # Write only the transcript to the console
-  print("\nTranscript: " + transcript)
-  print("\nWords: " + str(words))
+  # print("\nTranscript: " + transcript)
+  # print("\nWords: " + str(words))
+
+  return transcript
 
 try:
   # If running in a Jupyter notebook, Jupyter is already running an event loop, so run main with this line instead:

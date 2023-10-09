@@ -27,4 +27,11 @@ async function translate(source, target, text) {
 
 //translation test
 
+const url = 'https://static.deepgram.com/examples/nasa-spacewalk-interview.wav';
+deepgram.transcription.preRecorded({ url }).then(async (response) => {
+  const { transcript } = response.results.channels[0].alternatives[0];
+  const translated = await translate('en', 'es', transcript);
+  console.log(translated);
+});
+
 translate('en', 'es', 'Hello world').then((data) => console.log(data));
