@@ -8,7 +8,7 @@ const deepgram = new Deepgram(process.env.DG_KEY);
 async function translate(source, target, text) {
   const url = 'https://dev-api.itranslate.com/translation/v2/';
   const headers = {
-    Authorization: 'YOUR ITRANSLATE API KEY',
+    Authorization: '60ce92a0-897c-4925-a79b-ad6cf581b9e7',
     'Content-Type': 'application/json',
   };
   const data = {
@@ -25,4 +25,6 @@ async function translate(source, target, text) {
   return result;
 }
 
-// translate('en', 'es', 'Hello world').then((data) => console.log(data))
+//translation test
+
+translate('en', 'es', 'Hello world').then((data) => console.log(data));

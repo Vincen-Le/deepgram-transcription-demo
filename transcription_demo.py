@@ -53,11 +53,12 @@ async def main():
   # Write the response to the console
   result_transcription = json.dumps(response, indent=4)
   words = response["results"]["channels"][0]["alternatives"][0]["words"]
+  transcript = response["results"]["channels"][0]["alternatives"][0]["transcript"]
   print(result_transcription)
   # print(json.dumps(response, indent=4))
 
   # Write only the transcript to the console
-  print("\nTranscript: " + response["results"]["channels"][0]["alternatives"][0]["transcript"])
+  print("\nTranscript: " + transcript)
   print("\nWords: " + str(words))
 
 try:
