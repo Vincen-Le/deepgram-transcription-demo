@@ -1,7 +1,7 @@
 import aiohttp
 import json
 import asyncio
-from transcription_demo import main as transcribe
+from transcription import main as transcribe
 
 # Translation demo for pre-recorded audio files
 
@@ -13,8 +13,8 @@ async def main():
     TARGET = 'es'
     # Await response from iTranslate API with Deepgram transcription input
     translation = await translate(SOURCE, TARGET, transcription)
-    print(transcription)
-    print(translation)
+    print('Transcription: "%s" \n' % (transcription))
+    print('Translation: %s' % (translation))
 
 # Translation takes source language -> target language
 
