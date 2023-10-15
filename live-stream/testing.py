@@ -384,6 +384,8 @@ def main():
     """Entrypoint for the example."""
     # Parse the command-line arguments.
     args = parse_args()
+    if not args.tier:
+        args.tier = 'nova'
     input = args.input
     format = args.format.lower()
     host = args.host
