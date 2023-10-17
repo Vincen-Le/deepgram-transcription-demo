@@ -5,8 +5,12 @@ def main(input_text):
 
 
 def clean_text(text):
+    # Step 1: Remove beginning text data
+    cleaned_text = re.sub(r'(?m)^\@.*\n?', '', text)
+
     # Step 2: Remove text markers and timestamps
-    cleaned_text = re.sub(r'\*.:|\d+_\d+', '', text)
+    cleaned_text = re.sub(r'&=[^ ]*', '', cleaned_text)
+    cleaned_text = re.sub(r'\*.:|\d+_\d+', '', cleaned_text)
 
     # Step 3: Replace newline characters with spaces
     cleaned_text = cleaned_text.replace('\n', ' ')

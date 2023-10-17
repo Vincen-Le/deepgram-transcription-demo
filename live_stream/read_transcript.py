@@ -1,18 +1,23 @@
+from clean_text import main as clean_text
+
 def main():
-    # Step 1: Open the .cha file for reading
+    # Open the .cha file for reading
     cha_file_path = '../callbank_transcripts/eng/4065.cha'
 
     try:
         with open(cha_file_path, 'r', encoding='utf-8') as cha_file:
-            # Step 2: Read the file content
+            # Read the file content
             file_content = cha_file.read()
 
-            # Step 3: Extract the string (for example, extracting a line)
-            # Let's say you want to extract the first line from the file:
-            lines = file_content.split('\n')
-            if lines:
-                first_line = lines[0]
-                print("Extracted string:", first_line)
+            # Extract the string 
+            print(file_content)
+            transcript = clean_text(file_content)
+            print(transcript)
+            # lines = file_content.split('\n')
+            # transcript = ''''''
+            # for line in lines:
+            #     transcript = transcript + line
+            # print(transcript)
     except FileNotFoundError:
         print(f"File not found: {cha_file_path}")
     except Exception as e:
