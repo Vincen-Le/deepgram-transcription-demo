@@ -1,3 +1,4 @@
+# Site for audio files: https://media.talkbank.org/ca/CallHome/eng/0wav/
 import pyaudio
 import argparse
 import asyncio
@@ -7,9 +8,11 @@ import os
 import sys
 import wave
 import websockets
+import re
 
 from jiwer import wer
 from clean_text import main as clean_text
+from read_transcript import main as read_transcript
 
 from datetime import datetime
 
@@ -72,6 +75,20 @@ def mic_callback(input_data, frame_count, time_info, status_flag):
 async def run(key, method, format, **kwargs):
     deepgram_url = f'{kwargs["host"]}/v1/listen?punctuate=true'
 
+    # Extracts name of audio file (must be audio file from callBank)
+    if kwargs["filepath"]:
+        wav_filepath = kwargs["filepath"]
+        wav_filepath = wav_filepath.split("/")[-1]
+        file_name = re.search(r'.*(?=\.wav)', wav_filepath).group()
+        
+        # Match file_name with .cha transcript file
+        cha_file_name = file_name + ".cha"
+        cha_file_path = "../callbank_transcripts/eng/" + cha_file_name
+        
+        # Extract cleaned transcript from .cha file
+        test_transcript = read_transcript(cha_file_path)
+        test_transcript = clean_text(test_transcript)
+    
     if kwargs["model"]:
         deepgram_url += f"&model={kwargs['model']}"
 
@@ -244,6 +261,11 @@ async def run(key, method, format, **kwargs):
                         print(
                             f'🟢 Request finished with a duration of {res["duration"]} seconds. Exiting!'
                         )
+                        # Resulting transcript string for WER calculation
+                        result_transcript = ' '.join(all_transcripts)
+                        if kwargs["filepath"]:
+                            error = wer(test_transcript, result_transcript)
+                            print(f"WER: {str(error)}")
                 except KeyError:
                     print(f"🔴 ERROR: Received unexpected API response! {msg}")
 
@@ -415,6 +437,8 @@ def main():
                     ) = fh.getparams()
                     assert sample_width == 2, "WAV data must be 16-bit."
                     data = fh.readframes(num_samples)
+                    # WAV file stored locally
+                    filepath = args.input
                     asyncio.run(
                         run(
                             args.key,
@@ -426,7 +450,7 @@ def main():
                             channels=channels,
                             sample_width=sample_width,
                             sample_rate=sample_rate,
-                            filepath=args.input,
+                            filepath=filepath,
                             host=host,
                             timestamps=args.timestamps,
                         )
