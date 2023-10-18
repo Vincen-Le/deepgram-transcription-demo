@@ -1,4 +1,5 @@
 import re
+from read_transcript import read_transcript
 
 def main(input_text):
     return clean_text(input_text)
@@ -55,6 +56,13 @@ input_text = '''
 *A:    But &-um . 262980_263610
 '''
 
+# Transcript text
+filepath = '../callbank_transcripts/eng/4065.cha'
+transcript_text = read_transcript(filepath)
+print(f"Before: {transcript_text}")
+
 # Getting cleaned text
-# cleaned_text = clean_text(input_text)
+cleaned_text = clean_text(transcript_text)
+print(f"After: {cleaned_text}")
+
 # print(cleaned_text)

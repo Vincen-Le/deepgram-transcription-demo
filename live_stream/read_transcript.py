@@ -1,6 +1,8 @@
-from clean_text import main as clean_text
 
 def main(filepath):
+    return read_transcript(filepath)
+
+def read_transcript(filepath):
     # Open the .cha file for reading
     cha_file_path = filepath
 
@@ -16,4 +18,4 @@ def main(filepath):
         print(f"An error occurred: {str(e)}")
 
 if __name__ == "__main__":
-    main()
+    main(filepath)
