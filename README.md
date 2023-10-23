@@ -24,3 +24,8 @@ Cleans the pre-loaded transcript from callbank_transcripts for input into testin
 `-ts` or `--timestamps`: Whether to include timestamps to printed streamed transcript; Defaults to False
 `-f` or `--format`: Format for output where "text" is plaintext, "VTT," or "SRT" which will save to directory
 `-tr` or `--translate`: Translate from source to target language (i.e. `--translate en es`); Defaults to empty language input array
+
+## translation live stream demo
+
+1. `cd live_stream`
+2. `python testing.py -k DEEPGRAM_API_KEY`
