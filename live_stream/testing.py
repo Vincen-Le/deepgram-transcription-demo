@@ -122,7 +122,7 @@ async def run(key, method, format, **kwargs):
         translate_action = True
         source = kwargs["translate"][0]
         target = kwargs["translate"][1]
-        
+
     if method == "mic":
         deepgram_url += "&encoding=linear16&sample_rate=16000"
 
@@ -423,7 +423,7 @@ def parse_args():
         help='Input to stream to Deepgram. Can be "mic" to stream from your microphone (requires pyaudio), the path to a WAV file, or the URL to a direct audio stream. Defaults to the included file preamble.wav',
         nargs="?",
         const=1,
-        default="preamble.wav",
+        default="../audio_files/4065.wav",
         type=validate_input,
     )
     parser.add_argument(

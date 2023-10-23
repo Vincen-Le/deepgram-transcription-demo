@@ -11,9 +11,17 @@ Use the package manager [pip] -> `pip install -r requirements.txt`
 Run the following command:
 `python testing.py -k DEEPGRAM_API_KEY -i ../audio_files/CALLBANK_ID.wav`
 
-## clean_text()
+## clean_text(input)
 
 Cleans the pre-loaded transcript from callbank_transcripts for input into testing suite to check WER (word error rate)
+
+## read_transcript(FILEPATH_CHA)
+
+Reads corresponding callbank transcript from callbank_transcripts; Matches the inputted callbank audio file
+
+## testing.py
+
+Main livestream testing suite
 
 ## testing.py commands
 
