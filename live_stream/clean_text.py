@@ -57,12 +57,12 @@ input_text = '''
 '''
 
 # Transcript text
-filepath = '../callbank_transcripts/eng/4065.cha'
-transcript_text = read_transcript(filepath)
-print(f"Before: {transcript_text}")
+# filepath = '../callbank_transcripts/eng/4065.cha'
+# transcript_text = read_transcript(filepath)
+# print(f"Before: {transcript_text}")
 
 # Getting cleaned text
-cleaned_text = clean_text(transcript_text)
-print(f"After: {cleaned_text}")
+# cleaned_text = clean_text(transcript_text)
+# print(f"After: {cleaned_text}")
 
 # print(cleaned_text)

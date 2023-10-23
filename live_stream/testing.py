@@ -20,6 +20,7 @@ startTime = datetime.now()
 
 all_mic_data = []
 all_transcripts = []
+all_translations = []
 
 # path to default audio file
 default_audio = ''
@@ -65,6 +66,27 @@ def subtitle_formatter(response, format):
 
     return subtitle_string
 
+#Used for translation
+async def translate(source, target, text):
+    url = 'https://dev-api.itranslate.com/translation/v2/'
+    headers = {
+        'Authorization' : '60ce92a0-897c-4925-a79b-ad6cf581b9e7',
+        'Content-Type' : 'application/json',
+    }
+    data = {
+        'source' : {'dialect': source, 'text': text},
+        'target' : {'dialect': target},
+    }
+
+
+    # POST request made with aiohttp and JSON serialization handled
+
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=headers, json=data) as response:
+            result = await response.json()
+            result = result['target']['text']
+            return result
+
 
 # Used for microphone streaming only.
 def mic_callback(input_data, frame_count, time_info, status_flag):
@@ -74,6 +96,7 @@ def mic_callback(input_data, frame_count, time_info, status_flag):
 
 async def run(key, method, format, **kwargs):
     deepgram_url = f'{kwargs["host"]}/v1/listen?punctuate=true'
+    translate_action = False
 
     # Extracts name of audio file (must be audio file from callBank)
     if kwargs["filepath"]:
@@ -95,6 +118,11 @@ async def run(key, method, format, **kwargs):
     if kwargs["tier"]:
         deepgram_url += f"&tier={kwargs['tier']}"
 
+    if len(kwargs["translate"]) == 2:
+        translate_action = True
+        source = kwargs["translate"][0]
+        target = kwargs["translate"][1]
+        
     if method == "mic":
         deepgram_url += "&encoding=linear16&sample_rate=16000"
 
@@ -111,6 +139,10 @@ async def run(key, method, format, **kwargs):
             print(f'ℹ️  Model: {kwargs["model"]}')
         if kwargs["tier"]:
             print(f'ℹ️  Tier: {kwargs["tier"]}')
+        if kwargs["filepath"]:
+            print(f'ℹ️  File: {kwargs["filepath"]}')
+        if len(kwargs["translate"]) == 2:
+            print(f'ℹ️  Source/Target: {kwargs["translate"][0]} -> {kwargs["translate"][1]}')
         print("🟢 (1/5) Successfully opened Deepgram streaming connection")
 
         async def sender(ws):
@@ -205,21 +237,35 @@ async def run(key, method, format, **kwargs):
                         if transcript != "":
                             if first_transcript:
                                 print("🟢 (4/5) Began receiving transcription")
+                                if translate_action:
+                                    print(f'🟢 Translating from {source} to {target}...')
                                 # if using webvtt, print out header
                                 if format == "vtt":
                                     print("WEBVTT\n")
                                 first_transcript = False
                             if format == "vtt" or format == "srt":
                                 transcript = subtitle_formatter(res, format)
-                            print(transcript)
+                            # Call to iTranslate API
+                            if translate_action:
+                                translation = await translate(source, target, transcript)
+                                print(translation)
+                                all_translations.append(translation)
+                            else:
+                                print(transcript)
                             all_transcripts.append(transcript)
+                            
 
                         # if using the microphone, close stream if user says "goodbye"
                         if method == "mic" and "goodbye" in transcript.lower():
                             await ws.send(json.dumps({"type": "CloseStream"}))
-                            print(
+                            if translate_action:
+                                print(
+                                "🟢 (5/5) Successfully closed Deepgram connection, waiting for final translations if necessary"
+                                )
+                            else:
+                                print(
                                 "🟢 (5/5) Successfully closed Deepgram connection, waiting for final transcripts if necessary"
-                            )
+                                )
 
                     # handle end of stream
                     if res.get("created"):
@@ -265,7 +311,14 @@ async def run(key, method, format, **kwargs):
                         result_transcript = ' '.join(all_transcripts)
                         if kwargs["filepath"]:
                             error = wer(test_transcript, result_transcript)
-                            print(f"WER: {str(error)}")
+                            print(f'🟢 Transcription WER: {str(error)}')
+                        # Resulting translation if -tr called
+                        if translate_action:
+                            result_translation = ' '.join(all_translations)
+                            # test_translation = await translate(source, target, test_transcript)
+                            # translation_error = wer(test_translation, result_translation)
+                            print(f'🟢 iTranslate translation from {source} to {target}: {result_translation}')
+                            # print(f'🟢 Translation WER: {str(translation_error)}')
                 except KeyError:
                     print(f"🔴 ERROR: Received unexpected API response! {msg}")
 
@@ -301,6 +354,16 @@ async def run(key, method, format, **kwargs):
             functions.append(asyncio.ensure_future(microphone()))
 
         await asyncio.gather(*functions)
+
+
+# Check the length of input language is proper formatting for input to iTranslate API
+def validate_input_length(input):
+    if len(input) != 2:
+        raise argparse.ArgumentTypeError(
+        f'{input} is an invalid input. Please enter language in correct format (i.e. English = en)'
+    )
+    return input.lower()
+
 
 
 def validate_input(input):
@@ -396,6 +459,14 @@ def parse_args():
         default="text",
         type=validate_format,
     )
+    parser.add_argument(
+        "-tr",
+        "--translate",
+        help='Whether to translate from source language to target language. Defaults to empty [source, target] array',
+        nargs=2,
+        default=[],
+        type=validate_input_length
+    )
     #Parse the host
     parser.add_argument(
         "--host",
@@ -453,6 +524,7 @@ def main():
                             filepath=filepath,
                             host=host,
                             timestamps=args.timestamps,
+                            translate=args.translate,
                         )
                     )
             else:

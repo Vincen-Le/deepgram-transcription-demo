@@ -1,19 +1,22 @@
 import aiohttp
 import json
 import asyncio
-from transcription import main as transcribe
+from read_transcript import read_transcript
+from clean_text import clean_text
 
 # Translation demo for pre-recorded audio files
 
 async def main():
 
-    # Await response from Deepgram transcription API
-    transcription = await transcribe()
+    # Read transcript from .cha file
+    FILEPATH = '../callbank_transcripts/eng/4065.cha'
+    transcript = read_transcript(FILEPATH)
+    cleaned_transcript = clean_text(transcript)
     SOURCE = 'en'
     TARGET = 'es'
     # Await response from iTranslate API with Deepgram transcription input
-    translation = await translate(SOURCE, TARGET, transcription)
-    print('Transcription: "%s" \n' % (transcription))
+    translation = await translate(SOURCE, TARGET, cleaned_transcript)
+    print('Transcription: "%s" \n' % (cleaned_transcript))
     print('Translation: %s' % (translation))
 
 # Translation takes source language -> target language
@@ -35,9 +38,9 @@ async def translate(source, target, text):
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, json=data) as response:
             result = await response.json()
-            raw_translation = result["target"]["text"]
+            #raw_translation = result["target"]["text"]
             print(result)
             print('\n')
-            return raw_translation
+            return result
         
 asyncio.run(main())
