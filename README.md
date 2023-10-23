@@ -25,13 +25,13 @@ Main livestream testing suite
 
 ## testing.py commands
 
-`-k` or `--key`: Insert DEEPGRAM_API_KEY for authorization
-`-i` or `--input`: Input "mic" to stream from mic, FILEPATH to WAV file, or URL to direct audio stream; Defaults to "4065.wav"
-`-m` or `--model`: Which model to make request against (i.e. `--model phonecall`); Defaults to general
-`-t` or `--tier`: Which model tier to make request against; Defaults to nova
-`-ts` or `--timestamps`: Whether to include timestamps to printed streamed transcript; Defaults to False
-`-f` or `--format`: Format for output where "text" is plaintext, "VTT," or "SRT" which will save to directory
-`-tr` or `--translate`: Translate from source to target language (i.e. `--translate en es`); Defaults to empty language input array
+- `-k` or `--key`: Insert DEEPGRAM_API_KEY for authorization
+- `-i` or `--input`: Input "mic" to stream from mic, FILEPATH to WAV file, or URL to direct audio stream; Defaults to "4065.wav"
+- `-m` or `--model`: Which model to make request against (i.e. `--model phonecall`); Defaults to general
+- `-t` or `--tier`: Which model tier to make request against; Defaults to nova
+- `-ts` or `--timestamps`: Whether to include timestamps to printed streamed transcript; Defaults to False
+- `-f` or `--format`: Format for output where "text" is plaintext, "VTT," or "SRT" which will save to directory
+- `-tr` or `--translate`: Translate from source to target language (i.e. `--translate en es`); Defaults to empty language input array
 
 ## translation live stream demo
 
