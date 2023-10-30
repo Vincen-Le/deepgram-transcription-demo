@@ -28,9 +28,15 @@ def clean_text(text):
     cleaned_text = re.sub(r'   ', ' ', cleaned_text)
     cleaned_text = re.sub(r'  ', ' ', cleaned_text)
 
-    cleaned_text=cleaned_text.replace(",","")
-    cleaned_text=cleaned_text.replace(".","")
-    cleaned_text=cleaned_text.replace("'","")
+    cleaned_text = re.sub(r'xxx', ' ', cleaned_text)
+
+    # Step 6: Remove unnecessary spaces and punctuation
+    cleaned_text = re.sub(r'\s+', ' ', cleaned_text)
+    cleaned_text = re.sub(r'[^a-zA-Z0-9\s.?]', '', cleaned_text)
+
+    # cleaned_text=cleaned_text.replace(",","")
+    # cleaned_text=cleaned_text.replace(".","")
+    # cleaned_text=cleaned_text.replace("'","")
 
     return cleaned_text.strip()  # Removes leading and trailing spaces
 
@@ -56,12 +62,12 @@ input_text = '''
 *A:    But &-um . 262980_263610
 '''
 
-# Transcript text
+# # Transcript text
 # filepath = '../callbank_transcripts/eng/4065.cha'
 # transcript_text = read_transcript(filepath)
 # print(f"Before: {transcript_text}")
 
-# Getting cleaned text
+# # Getting cleaned text
 # cleaned_text = clean_text(transcript_text)
 # print(f"After: {cleaned_text}")
 

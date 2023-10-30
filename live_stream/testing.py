@@ -309,9 +309,11 @@ async def run(key, method, format, **kwargs):
                         )
                         # Resulting transcript string for WER calculation
                         result_transcript = ' '.join(all_transcripts)
+                        result_transcript = clean_text(result_transcript)
                         if kwargs["filepath"]:
                             error = wer(test_transcript, result_transcript)
                             print(f'🟢 Transcription WER: {str(error)}')
+                            print(f'FINAL TRANSCRIPT: {result_transcript}')
                         # Resulting translation if -tr called
                         if translate_action:
                             result_translation = ' '.join(all_translations)
